@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Team</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <section id="app">
+    <div class="row">
+      <h1>Our Team By Omar Kashlan</h1>
+    </div>
+    <div class="row">
+      <div class="column" v-for="person in persons" :key="person.id">
+        <div class="card">
+          <div class="img-container">
+            <img :src="person.avatarUrl" /> <!--لربط المصدر بالمصدر تحت-->
+          </div>
+
+          <h2>{{ person.username }}</h2> <!--ربط المحتوى بالخاصية تحت-->
+          <h5>{{ person.domain }}</h5> <!--ربط المحتوى بالخاصية تحت-->
+          <p style="font-size: 20px;"><u>{{ person.title }}</u></p>
+
+          <div class="icons">
+            <a :href="person.twitter"> <!--لربط المصدر بالمصدر تحت-->
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a :href="person.linkedin"> <!--لربط المصدر بالمصدر تحت-->
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a :href="person.github"> <!--لربط المصدر بالمصدر تحت-->
+              <i class="fab fa-github"></i>
+            </a>
+            <a :href="person.email"> <!--لربط المصدر بالمصدر تحت-->
+              <i class="fas fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    const app = Vue.createApp({ // تعليمة بدء اعدادات تطبيق فيو
+      data() { // البيانات التي سيقوم بإستخدامها ك كومونينت, وهنا هي معلومات الاشخاص
+        return {
+          persons: [], // هنا نقوم بإستدعاء البيانات, ولكن المصفوفة فارغة هنا لأن البيانات الخاصة بالمستخدمين فارغة ولم يجبلها من المستخدم بعد
+        };
+      },
+      mounted() { // بعد تثبيت الفيو في الدوم, يقوم ال ماوندت بجلب البيانات الخاصة بالمستخدمين من السيرفر وتحديث مصفوفة الاشخاص
+        fetch('https://dummyjson.com/users')
+          .then(response => response.json()) //لتحويل البيانات من جايسون الى جي اس
+          .then(data => { //بعد تحليل البيانات نقوم بإستدعاء البيانات من جديد
+            this.persons = data.users.map(user => ({ //يعني نفس المصفوفة بس نسخ ثانية فيها المعلومات الجديدة
+              id: user.id,
+              username: user.username,
+              domain: user.domain,
+              title: user.company.title,
+              avatarUrl: user.image,
+              twitter: 'https://www.google.com',
+              linkedin: 'https://www.google.com',
+              github: 'https://www.google.com',
+              email: user.email,
+            }));
+          })
+          .catch(error => {
+            console.error('Error:', error); // اي في حال حدوث مشكلة اعرض كلمة ايرور في الكونسل
+          });
+
+      },
+    });
+
+    app.mount("#app"); // عرض المعلومات في الاي دي ابب
+  </script>
+</body>
+
+</html>
